@@ -1,0 +1,39 @@
+<%- include('../partials/head', { title: pool.name }) %>
+<%- include('../partials/nav') %>
+<%- include('../partials/disclaimer') %>
+<main id="main" class="container narrow">
+  <%- include('../partials/flash') %>
+  <p><a href="/pools">&larr; All Investment Pools</a></p>
+  <div class="pool-detail-header">
+    <h1><%= pool.name %></h1>
+    <span class="risk-badge" style="background: <%= pool.color %>"><%= pool.risk_profile %></span>
+  </div>
+  <p class="lead"><%= pool.tagline %></p>
+
+  <div class="card">
+    <canvas id="pool-detail-chart" data-chart-type="line" height="340" role="img"
+      aria-label="<%= pool.name %> simulated index over the last 365 days" tabindex="0"></canvas>
+    <script type="application/json" id="pool-detail-chart-data"><%- JSON.stringify({
+      formatValue: 'index',
+      color: pool.color,
+      label: pool.name,
+      points: series.map(p => ({ ts: p.ts, value: p.index_value }))
+    }) %></script>
+  </div>
+
+  <dl class="pool-facts pool-facts-large">
+    <div><dt>Risk profile</dt><dd><%= pool.risk_profile %></dd></div>
+    <div><dt>Illustrative target range</dt><dd><%= (pool.target_low * 100).toFixed(0) %>%&ndash;<%= (pool.target_high * 100).toFixed(0) %>% per simulated year</dd></div>
+    <div><dt>Maximum per investor</dt><dd>$<%= (pool.max_alloc_cents / 100).toFixed(0) %></dd></div>
+  </dl>
+
+  <h2>About this pool</h2>
+  <p><%= pool.description %></p>
+
+  <div class="cta-band card">
+    <h2>Add this pool to your simulated portfolio</h2>
+    <a href="/register" class="btn btn-primary btn-large">Open a Free Simulated Account</a>
+  </div>
+</main>
+<%- include('../partials/footer') %>
+<script src="/js/charts.js"></script>

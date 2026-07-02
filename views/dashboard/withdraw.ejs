@@ -1,0 +1,45 @@
+<%- include('../partials/head', { title: 'Withdraw Funds' }) %>
+<%- include('../partials/nav') %>
+<%- include('../partials/disclaimer') %>
+<main id="main" class="container narrow">
+  <%- include('../partials/flash') %>
+  <h1>Withdraw Funds</h1>
+  <p class="lead">Cash balance available: <strong><%= (cashBalanceCents / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD' }) %></strong> (from prior withdrawals).</p>
+
+  <% if (positionViews.length === 0) { %>
+    <div class="card empty-state">
+      <p>You don't have any active positions to withdraw from.</p>
+      <a href="/deposit" class="btn btn-primary">Make a Deposit</a>
+    </div>
+  <% } %>
+
+  <% positionViews.forEach(({ position, pool, penalty }) => { %>
+    <div class="card withdraw-card">
+      <div class="position-card-header">
+        <h2><%= pool.name %></h2>
+        <span class="risk-badge" style="background: <%= pool.color %>"><%= pool.risk_profile %></span>
+      </div>
+      <dl class="pool-facts pool-facts-large">
+        <div><dt>Current value</dt><dd><%= (penalty.grossCents / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD' }) %></dd></div>
+        <% if (penalty.matured) { %>
+          <div><dt>Status</dt><dd class="positive">Matured &mdash; no penalty applies</dd></div>
+        <% } else { %>
+          <div><dt>Early-withdrawal penalty</dt><dd class="negative">Year <%= penalty.year %>: <%= (penalty.rate * 100).toFixed(0) %>% (&minus;<%= (penalty.penaltyCents / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD' }) %>)</dd></div>
+        <% } %>
+        <div><dt>You would receive</dt><dd><strong><%= (penalty.netCents / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD' }) %></strong></dd></div>
+      </dl>
+
+      <form action="/withdraw/<%= position.id %>" method="post" novalidate>
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <% if (!penalty.matured) { %>
+          <label class="checkbox-row">
+            <input type="checkbox" name="confirm" value="yes" required>
+            I understand a <%= (penalty.rate * 100).toFixed(0) %>% early-withdrawal penalty applies, and I want to withdraw now anyway.
+          </label>
+        <% } %>
+        <button type="submit" class="btn btn-primary btn-block">Withdraw This Position</button>
+      </form>
+    </div>
+  <% }) %>
+</main>
+<%- include('../partials/footer') %>

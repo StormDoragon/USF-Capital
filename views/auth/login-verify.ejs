@@ -1,0 +1,25 @@
+<%- include('../partials/head', { title: 'Verify Your Identity' }) %>
+<%- include('../partials/nav') %>
+<%- include('../partials/disclaimer') %>
+<main id="main" class="container narrow">
+  <div class="card form-card">
+    <h1>Enter Your Authenticator Code</h1>
+    <p class="lead">Two-factor authentication is on for this account. Open your authenticator app and enter the current 6-digit code.</p>
+
+    <% if (errors && errors.length) { %>
+      <div class="form-errors" role="alert">
+        <ul><% errors.forEach(e => { %><li><%= e %></li><% }) %></ul>
+      </div>
+    <% } %>
+
+    <form action="/login/verify" method="post" novalidate>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+      <label for="token">6-digit code</label>
+      <input type="text" id="token" name="token" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*" maxlength="6" required autofocus>
+
+      <button type="submit" class="btn btn-primary btn-large btn-block">Verify &amp; Log In</button>
+    </form>
+  </div>
+</main>
+<%- include('../partials/footer') %>

@@ -1,0 +1,36 @@
+<%- include('../partials/head', { title: 'Verify Your Identity' }) %>
+<%- include('../partials/nav') %>
+<%- include('../partials/disclaimer') %>
+<main id="main" class="container narrow">
+  <div class="card form-card">
+    <h1>Verify Your Identity</h1>
+    <p class="lead">This is a demonstration identity check ("KYC"). Nothing you enter is sent anywhere outside this
+    server — it's here to show a realistic onboarding flow. You must be 18 or older to continue.</p>
+
+    <% if (errors && errors.length) { %>
+      <div class="form-errors" role="alert">
+        <ul><% errors.forEach(e => { %><li><%= e %></li><% }) %></ul>
+      </div>
+    <% } %>
+
+    <form action="/kyc" method="post" novalidate>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+      <label for="fullName">Full legal name</label>
+      <input type="text" id="fullName" name="fullName" autocomplete="name" required value="<%= values.fullName || '' %>">
+
+      <label for="dob">Date of birth</label>
+      <input type="date" id="dob" name="dob" required value="<%= values.dob || '' %>">
+
+      <label for="country">Country of residence</label>
+      <input type="text" id="country" name="country" autocomplete="country-name" required value="<%= values.country || '' %>">
+
+      <label for="idNumber">ID number (any digits — demo only)</label>
+      <input type="text" id="idNumber" name="idNumber" required>
+      <p class="field-hint">This is never verified against a real registry. Any digits will do for this demo.</p>
+
+      <button type="submit" class="btn btn-primary btn-large btn-block">Submit Verification</button>
+    </form>
+  </div>
+</main>
+<%- include('../partials/footer') %>

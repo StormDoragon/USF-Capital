@@ -1,0 +1,26 @@
+<%- include('../partials/head', { title: 'Security & Settings' }) %>
+<%- include('../partials/nav') %>
+<%- include('../partials/disclaimer') %>
+<main id="main" class="container narrow">
+  <%- include('../partials/flash') %>
+  <h1>Security &amp; Settings</h1>
+  <div class="settings-menu">
+    <a class="card settings-menu-item" href="/settings/password">
+      <h2>Change Password</h2>
+      <p>Update the password you use to log in.</p>
+    </a>
+    <a class="card settings-menu-item" href="/settings/2fa">
+      <h2>Two-Factor Authentication</h2>
+      <p>Add an extra layer of protection with an authenticator app.</p>
+    </a>
+    <a class="card settings-menu-item" href="/settings/sessions">
+      <h2>Active Sessions</h2>
+      <p>See where you're logged in, and sign out other devices.</p>
+    </a>
+    <a class="card settings-menu-item" href="/settings/audit-log">
+      <h2>Security Activity</h2>
+      <p>Review a log of security-relevant events on your account.</p>
+    </a>
+  </div>
+</main>
+<%- include('../partials/footer') %>

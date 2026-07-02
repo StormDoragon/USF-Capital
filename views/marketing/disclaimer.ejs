@@ -1,0 +1,36 @@
+<%- include('../partials/head', { title: 'Demo Disclaimer' }) %>
+<%- include('../partials/nav') %>
+<%- include('../partials/disclaimer') %>
+<main id="main" class="container narrow">
+  <h1>Demo Disclaimer</h1>
+  <p class="lead">Please read this before using USF Capital.</p>
+
+  <div class="callout">
+    <p><strong>USF Capital is a software portfolio demonstration.</strong> It is not a real broker, bank, exchange,
+    or investment firm. It is not registered with, licensed by, or regulated by any financial authority anywhere.</p>
+  </div>
+
+  <h2>What is simulated</h2>
+  <ul class="check-list">
+    <li>Every account balance, deposit, and withdrawal is a virtual number stored in a database — no real money is
+    ever collected, held, transmitted, or returned.</li>
+    <li>Every chart and performance figure is produced by a mathematical model (geometric Brownian motion), not by
+    real market data or a real trading strategy.</li>
+    <li>The "payment methods" shown at deposit are illustrative choices only; no card, bank, or crypto details are
+    processed, stored, or charged.</li>
+    <li>The identity-verification ("KYC") step is a demonstration of a real onboarding flow; nothing you submit is
+    sent to any government or verification service.</li>
+  </ul>
+
+  <h2>What is real</h2>
+  <ul class="check-list">
+    <li>The application-level security controls (password hashing, two-factor authentication, session management,
+    CSRF protection, rate limiting) are genuinely implemented, to demonstrate production-grade engineering.</li>
+    <li>Your account data lives in a real database for the lifetime of this demo, but should not be treated as a
+    durable or backed-up record.</li>
+  </ul>
+
+  <p>By using this site you acknowledge that it is a demonstration only, and agree not to treat anything on it as
+  financial advice, a real financial product, or a real solicitation.</p>
+</main>
+<%- include('../partials/footer') %>

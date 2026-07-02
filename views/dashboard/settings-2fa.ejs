@@ -1,0 +1,42 @@
+<%- include('../partials/head', { title: 'Two-Factor Authentication' }) %>
+<%- include('../partials/nav') %>
+<%- include('../partials/disclaimer') %>
+<main id="main" class="container narrow">
+  <p><a href="/settings">&larr; Back to Settings</a></p>
+  <div class="card form-card">
+    <h1>Two-Factor Authentication</h1>
+
+    <% if (errors && errors.length) { %>
+      <div class="form-errors" role="alert">
+        <ul><% errors.forEach(e => { %><li><%= e %></li><% }) %></ul>
+      </div>
+    <% } %>
+
+    <% if (qrDataUrl) { %>
+      <p class="lead">Scan this code with your authenticator app (such as Google Authenticator or Authy), then enter the 6-digit code it shows.</p>
+      <img class="totp-qr" src="<%= qrDataUrl %>" alt="QR code for two-factor authentication setup" width="220" height="220">
+      <p class="field-hint">Can't scan? Enter this code manually: <code><%= secret %></code></p>
+      <form action="/settings/2fa/verify" method="post" novalidate>
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <label for="token">6-digit code</label>
+        <input type="text" id="token" name="token" inputmode="numeric" pattern="[0-9]*" maxlength="6" required autofocus>
+        <button type="submit" class="btn btn-primary btn-large btn-block">Turn On Two-Factor Authentication</button>
+      </form>
+    <% } else if (user && user.totpEnabled) { %>
+      <p class="lead positive">Two-factor authentication is currently <strong>on</strong> for your account.</p>
+      <form action="/settings/2fa/disable" method="post" novalidate>
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <label for="currentPassword">Confirm your password to turn it off</label>
+        <input type="password" id="currentPassword" name="currentPassword" autocomplete="current-password" required>
+        <button type="submit" class="btn btn-secondary btn-block">Turn Off Two-Factor Authentication</button>
+      </form>
+    <% } else { %>
+      <p class="lead">Two-factor authentication is currently <strong>off</strong>. Turn it on for an extra layer of protection at login.</p>
+      <form action="/settings/2fa/enroll" method="post" novalidate>
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <button type="submit" class="btn btn-primary btn-large btn-block">Set Up Two-Factor Authentication</button>
+      </form>
+    <% } %>
+  </div>
+</main>
+<%- include('../partials/footer') %>

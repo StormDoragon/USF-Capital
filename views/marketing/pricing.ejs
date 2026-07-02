@@ -1,0 +1,39 @@
+<%- include('../partials/head', { title: 'Pricing & Terms' }) %>
+<%- include('../partials/nav') %>
+<%- include('../partials/disclaimer') %>
+<main id="main" class="container narrow">
+  <%- include('../partials/flash') %>
+  <h1>Pricing &amp; Terms</h1>
+  <p class="lead">This demo has no real fees. These are the simulated limits and rules the platform enforces.</p>
+
+  <div class="card">
+    <h2>Deposit limits</h2>
+    <dl class="pool-facts pool-facts-large">
+      <div><dt>Lifetime deposit limit</dt><dd>$<%= totalCapDollars.toFixed(0) %> in simulated funds per account</dd></div>
+      <div><dt>Maximum per pool</dt><dd>$<%= maxPoolDollars.toFixed(0) %> per investor, per pool</dd></div>
+      <div><dt>Payment methods</dt><dd>Mock card, mock bank transfer, or mock crypto — credited instantly</dd></div>
+    </dl>
+  </div>
+
+  <div class="card">
+    <h2>The <%= lockYears %>-year lock</h2>
+    <p>Every simulated position locks for <%= lockYears %> simulated years from the day it's opened. You can withdraw
+    early, but a penalty applies, tiered by how far into the lock you are:</p>
+    <table class="penalty-table">
+      <thead><tr><th>Year of the lock</th><th>Early-withdrawal penalty</th></tr></thead>
+      <tbody>
+        <tr><td>Year 1</td><td>20%</td></tr>
+        <tr><td>Year 2</td><td>12%</td></tr>
+        <tr><td>Year 3</td><td>6%</td></tr>
+        <tr><td>After maturity</td><td>0% &mdash; no penalty</td></tr>
+      </tbody>
+    </table>
+    <p>Net proceeds from any withdrawal are credited instantly to your virtual cash balance.</p>
+  </div>
+
+  <div class="card">
+    <h2>Fees</h2>
+    <p>There are none. This is a non-commercial demo — no management fees, no spreads, no withdrawal fees.</p>
+  </div>
+</main>
+<%- include('../partials/footer') %>

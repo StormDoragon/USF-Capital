@@ -1,0 +1,24 @@
+<%- include('../partials/head', { title: 'Transaction History' }) %>
+<%- include('../partials/nav') %>
+<%- include('../partials/disclaimer') %>
+<main id="main" class="container narrow">
+  <h1>Transaction History</h1>
+  <div class="card table-card">
+    <table class="data-table">
+      <thead><tr><th>Date</th><th>Type</th><th>Amount</th></tr></thead>
+      <tbody>
+        <% transactions.forEach(t => { %>
+          <tr>
+            <td><%= new Date(t.created_at).toLocaleString('en-US') %></td>
+            <td class="capitalize"><%= t.type %></td>
+            <td><%= (t.amount_cents / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD' }) %></td>
+          </tr>
+        <% }) %>
+        <% if (transactions.length === 0) { %>
+          <tr><td colspan="3">No transactions yet.</td></tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</main>
+<%- include('../partials/footer') %>

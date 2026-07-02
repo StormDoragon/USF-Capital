@@ -1,0 +1,27 @@
+<%- include('../partials/head', { title: 'Security Activity' }) %>
+<%- include('../partials/nav') %>
+<%- include('../partials/disclaimer') %>
+<main id="main" class="container narrow">
+  <p><a href="/settings">&larr; Back to Settings</a></p>
+  <h1>Security Activity</h1>
+  <p class="lead">A log of security-relevant events on your account.</p>
+
+  <div class="card table-card">
+    <table class="data-table">
+      <thead><tr><th>Date</th><th>Event</th><th>Details</th></tr></thead>
+      <tbody>
+        <% events.forEach(e => { %>
+          <tr>
+            <td><%= new Date(e.created_at).toLocaleString('en-US') %></td>
+            <td class="capitalize"><%= e.event_type.replace(/_/g, ' ') %></td>
+            <td><%= e.detail || '' %></td>
+          </tr>
+        <% }) %>
+        <% if (events.length === 0) { %>
+          <tr><td colspan="3">No activity recorded yet.</td></tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</main>
+<%- include('../partials/footer') %>

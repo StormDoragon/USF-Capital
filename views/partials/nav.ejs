@@ -1,0 +1,25 @@
+<header class="site-header">
+  <div class="site-header-inner container">
+    <a class="brand" href="/">USF <span>Capital</span></a>
+    <nav class="main-nav" aria-label="Main">
+      <a href="/" class="<%= path === '/' ? 'active' : '' %>">Home</a>
+      <a href="/how-it-works" class="<%= path === '/how-it-works' ? 'active' : '' %>">How It Works</a>
+      <a href="/pools" class="<%= path && path.startsWith('/pools') ? 'active' : '' %>">Investment Pools</a>
+      <a href="/security" class="<%= path === '/security' ? 'active' : '' %>">Security &amp; Trust</a>
+      <a href="/pricing" class="<%= path === '/pricing' ? 'active' : '' %>">Pricing</a>
+    </nav>
+    <div class="nav-actions">
+      <% if (user) { %>
+        <a href="/dashboard" class="btn btn-secondary btn-small">Dashboard</a>
+        <a href="/settings" class="btn btn-secondary btn-small">Settings</a>
+        <form action="/logout" method="post" class="inline-form">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <button type="submit" class="btn btn-ghost btn-small">Log Out</button>
+        </form>
+      <% } else { %>
+        <a href="/login" class="btn btn-secondary btn-small">Log In</a>
+        <a href="/register" class="btn btn-primary btn-small">Create Account</a>
+      <% } %>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/app.js",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": ["views/**", "public/**", "db/schema.sql"]
+      }
+    }
+  ],
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/api/app" }
+  ]
+}

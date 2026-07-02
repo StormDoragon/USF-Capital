@@ -1,0 +1,34 @@
+<%- include('../partials/head', { title: 'Investment Pools' }) %>
+<%- include('../partials/nav') %>
+<%- include('../partials/disclaimer') %>
+<main id="main" class="container">
+  <%- include('../partials/flash') %>
+  <h1>Investment Pools</h1>
+  <p class="lead">Four simulated strategies, each with its own risk profile and illustrative target range.</p>
+
+  <div class="pool-grid">
+    <% cards.forEach(({ pool, series }) => { %>
+      <div class="card pool-card">
+        <div class="pool-card-header">
+          <h2><a href="/pools/<%= pool.key %>"><%= pool.name %></a></h2>
+          <span class="risk-badge" style="background: <%= pool.color %>"><%= pool.risk_profile %></span>
+        </div>
+        <p><%= pool.tagline %></p>
+        <canvas id="pool-<%= pool.key %>-chart" data-chart-type="sparkline" height="90" role="img"
+          aria-label="<%= pool.name %> simulated performance over the last 90 days" tabindex="0"></canvas>
+        <script type="application/json" id="pool-<%= pool.key %>-chart-data"><%- JSON.stringify({
+          formatValue: 'index',
+          color: pool.color,
+          points: series.map(p => ({ ts: p.ts, value: p.index_value }))
+        }) %></script>
+        <dl class="pool-facts">
+          <div><dt>Target range</dt><dd><%= (pool.target_low * 100).toFixed(0) %>%&ndash;<%= (pool.target_high * 100).toFixed(0) %>% / year</dd></div>
+          <div><dt>Max per investor</dt><dd>$<%= (pool.max_alloc_cents / 100).toFixed(0) %></dd></div>
+        </dl>
+        <a href="/pools/<%= pool.key %>" class="btn btn-secondary btn-block">View Details</a>
+      </div>
+    <% }) %>
+  </div>
+</main>
+<%- include('../partials/footer') %>
+<script src="/js/charts.js"></script>

@@ -1,0 +1,48 @@
+<%- include('../partials/head', { title: 'Make a Deposit' }) %>
+<%- include('../partials/nav') %>
+<%- include('../partials/disclaimer') %>
+<main id="main" class="container narrow">
+  <div class="card form-card">
+    <h1>Make a Simulated Deposit</h1>
+    <p class="lead">
+      You have <strong><%= (remainingCapCents / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD' }) %></strong>
+      remaining of your $<%= (totalCapCents / 100).toFixed(0) %> lifetime demo limit. Funds are credited instantly — nothing is really charged.
+    </p>
+
+    <% if (errors && errors.length) { %>
+      <div class="form-errors" role="alert">
+        <ul><% errors.forEach(e => { %><li><%= e %></li><% }) %></ul>
+      </div>
+    <% } %>
+
+    <form action="/deposit" method="post" novalidate>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+      <fieldset>
+        <legend>Choose how much to allocate</legend>
+        <% poolViews.forEach(({ pool, remainingCents }) => { %>
+          <div class="pool-amount-row">
+            <label for="amount_<%= pool.key %>"><%= pool.name %> <span class="field-hint">(up to $<%= (remainingCents / 100).toFixed(0) %> more)</span></label>
+            <div class="amount-input">
+              <span aria-hidden="true">$</span>
+              <input type="number" id="amount_<%= pool.key %>" name="amount_<%= pool.key %>" min="0" step="1" max="<%= remainingCents / 100 %>"
+                value="<%= values['amount_' + pool.key] || '' %>" placeholder="0">
+            </div>
+          </div>
+        <% }) %>
+      </fieldset>
+
+      <fieldset>
+        <legend>Payment method (simulated — nothing is charged)</legend>
+        <div class="radio-row">
+          <label><input type="radio" name="paymentMethod" value="card" <%= values.paymentMethod === 'card' || !values.paymentMethod ? 'checked' : '' %>> Mock Debit / Credit Card</label>
+          <label><input type="radio" name="paymentMethod" value="bank" <%= values.paymentMethod === 'bank' ? 'checked' : '' %>> Mock Bank Transfer</label>
+          <label><input type="radio" name="paymentMethod" value="crypto" <%= values.paymentMethod === 'crypto' ? 'checked' : '' %>> Mock Crypto Transfer</label>
+        </div>
+      </fieldset>
+
+      <button type="submit" class="btn btn-primary btn-large btn-block">Credit My Simulated Deposit</button>
+    </form>
+  </div>
+</main>
+<%- include('../partials/footer') %>

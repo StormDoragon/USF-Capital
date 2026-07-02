@@ -1,0 +1,37 @@
+<%- include('../partials/head', { title: 'How It Works' }) %>
+<%- include('../partials/nav') %>
+<%- include('../partials/disclaimer') %>
+<main id="main" class="container narrow">
+  <%- include('../partials/flash') %>
+  <h1>How USF Capital Works</h1>
+  <p class="lead">Five simple steps, from creating an account to watching your simulated portfolio mature.</p>
+
+  <ol class="steps">
+    <li>
+      <h2>1. Create your account</h2>
+      <p>Register with your email and a password. It takes less than a minute, and no payment details are ever asked for.</p>
+    </li>
+    <li>
+      <h2>2. Verify your identity (a demo check)</h2>
+      <p>We ask for your name, date of birth, country, and an ID number. This demonstrates a real "Know Your Customer" flow — nothing is sent to any outside verification service.</p>
+    </li>
+    <li>
+      <h2>3. Deposit a virtual amount</h2>
+      <p>Choose a mock payment method — card, bank transfer, or crypto — and instantly credit up to $<%= totalCapDollars.toFixed(0) %> in simulated funds. It's credited immediately; there is no waiting.</p>
+    </li>
+    <li>
+      <h2>4. Allocate across four simulated pools</h2>
+      <p>Split your deposit across four illustrative strategies with different risk levels. Each dollar you allocate opens a simulated position that starts tracking performance right away.</p>
+    </li>
+    <li>
+      <h2>5. Track it in real time, for <%= lockYears %> years</h2>
+      <p>Your dashboard updates automatically as the simulation engine ticks forward. Each position locks for <%= lockYears %> simulated years; you can withdraw early for a reducing penalty, or wait for it to mature and withdraw penalty-free.</p>
+    </li>
+  </ol>
+
+  <div class="cta-band card">
+    <h2>See it in action</h2>
+    <a href="/register" class="btn btn-primary btn-large">Open a Free Simulated Account</a>
+  </div>
+</main>
+<%- include('../partials/footer') %>

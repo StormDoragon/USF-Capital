@@ -1,0 +1,24 @@
+<%- include('../partials/head', { title: 'Active Sessions' }) %>
+<%- include('../partials/nav') %>
+<%- include('../partials/disclaimer') %>
+<main id="main" class="container narrow">
+  <p><a href="/settings">&larr; Back to Settings</a></p>
+  <h1>Active Sessions</h1>
+  <p class="lead">These are the devices currently signed in to your account. If you don't recognize one, sign it out.</p>
+
+  <% sessions.forEach(s => { %>
+    <div class="card session-row">
+      <div>
+        <p><strong><%= s.sid === currentSid ? 'This device' : 'Other device' %></strong></p>
+        <p class="field-hint">IP address: <%= s.ip || 'unknown' %></p>
+        <p class="field-hint">Browser: <%= s.user_agent || 'unknown' %></p>
+        <p class="field-hint">Last active: <%= new Date(s.last_seen_at).toLocaleString('en-US') %></p>
+      </div>
+      <form action="/settings/sessions/<%= s.sid %>/revoke" method="post" novalidate>
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <button type="submit" class="btn btn-ghost"><%= s.sid === currentSid ? 'Sign Out' : 'Revoke' %></button>
+      </form>
+    </div>
+  <% }) %>
+</main>
+<%- include('../partials/footer') %>

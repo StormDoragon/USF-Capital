@@ -1,0 +1,11 @@
+<%- include('partials/head', { title: title || 'Error' }) %>
+<%- include('partials/nav') %>
+<%- include('partials/disclaimer') %>
+<main id="main" class="container narrow">
+  <div class="card center-card">
+    <h1><%= title || 'Something went wrong' %></h1>
+    <p class="lead"><%= message %></p>
+    <a href="/" class="btn btn-primary btn-large">Go to the Home Page</a>
+  </div>
+</main>
+<%- include('partials/footer') %>

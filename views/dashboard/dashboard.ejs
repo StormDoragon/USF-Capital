@@ -1,0 +1,131 @@
+<%- include('../partials/head', { title: 'Your Portfolio' }) %>
+<%- include('../partials/nav') %>
+<%- include('../partials/disclaimer') %>
+<main id="main" class="container">
+  <%- include('../partials/flash') %>
+
+  <div class="dash-header">
+    <h1>Your Portfolio</h1>
+    <div class="dash-actions">
+      <a href="/deposit" class="btn btn-primary">Make a Deposit</a>
+      <a href="/withdraw" class="btn btn-secondary">Withdraw Funds</a>
+    </div>
+  </div>
+
+  <section class="dash-summary">
+    <div class="stat-tile">
+      <span class="stat-label">Total simulated value</span>
+      <span class="stat-value" id="dash-total-value"><%= (summary.totalValueCents / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD' }) %></span>
+    </div>
+    <div class="stat-tile">
+      <span class="stat-label">Total gain / loss</span>
+      <span class="stat-value <%= summary.totalGainCents >= 0 ? 'positive' : 'negative' %>" id="dash-total-gain">
+        <%= summary.totalGainCents >= 0 ? '+' : '' %><%= (summary.totalGainCents / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD' }) %>
+        (<%= summary.totalGainCents >= 0 ? '+' : '' %><%= (summary.totalGainPct * 100).toFixed(2) %>%)
+      </span>
+    </div>
+    <div class="stat-tile">
+      <span class="stat-label">Cash balance</span>
+      <span class="stat-value" id="dash-cash-balance"><%= (cashBalanceCents / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD' }) %></span>
+    </div>
+    <div class="stat-tile">
+      <span class="stat-label">Next unlock</span>
+      <span class="stat-value" id="dash-next-unlock">
+        <% if (summary.nextUnlock) { %>
+          <%= summary.nextUnlock.daysUntil > 0 ? summary.nextUnlock.daysUntil + ' days' : 'Matured' %>
+        <% } else { %>
+          &mdash;
+        <% } %>
+      </span>
+    </div>
+  </section>
+
+  <section class="dash-grid">
+    <div class="card">
+      <h2 class="card-title">Portfolio Value Over Time</h2>
+      <canvas id="dash-combined-chart" data-chart-type="line" height="300" role="img"
+        aria-label="Your combined simulated portfolio value over time" tabindex="0"></canvas>
+      <script type="application/json" id="dash-combined-chart-data"><%- JSON.stringify({
+        formatValue: 'currency',
+        color: '#2f6fed',
+        label: 'Portfolio value',
+        points: combinedSeries.map(p => ({ ts: p.ts, value: p.value_cents }))
+      }) %></script>
+    </div>
+    <div class="card">
+      <h2 class="card-title">Allocation</h2>
+      <canvas id="dash-allocation-donut" data-chart-type="donut" height="260" role="img"
+        aria-label="Your allocation across investment pools" tabindex="0"></canvas>
+      <script type="application/json" id="dash-allocation-donut-data"><%- JSON.stringify({
+        formatValue: 'currency',
+        segments: positionViews.map(v => ({ label: v.pool.name, value: v.position.current_value_cents, color: v.pool.color }))
+      }) %></script>
+    </div>
+  </section>
+
+  <section>
+    <h2>Your Simulated Positions</h2>
+    <% if (positionViews.length === 0) { %>
+      <div class="card empty-state">
+        <p>You don't have any active positions yet.</p>
+        <a href="/deposit" class="btn btn-primary">Make Your First Deposit</a>
+      </div>
+    <% } %>
+    <div class="position-grid">
+      <% positionViews.forEach(v => { %>
+        <div class="card position-card" id="position-<%= v.position.id %>">
+          <div class="position-card-header">
+            <h3><%= v.pool.name %></h3>
+            <span class="risk-badge" style="background: <%= v.pool.color %>"><%= v.pool.risk_profile %></span>
+          </div>
+          <canvas id="position-sparkline-<%= v.position.id %>" data-chart-type="sparkline" height="70" role="img"
+            aria-label="<%= v.pool.name %> position value trend" tabindex="0"></canvas>
+          <script type="application/json" id="position-sparkline-<%= v.position.id %>-data"><%- JSON.stringify({
+            formatValue: 'currency',
+            color: v.pool.color,
+            points: v.sparkline.map(p => ({ ts: p.ts, value: p.value_cents }))
+          }) %></script>
+          <dl class="pool-facts">
+            <div><dt>Current value</dt><dd id="position-value-<%= v.position.id %>"><%= (v.position.current_value_cents / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD' }) %></dd></div>
+            <div><dt>Principal</dt><dd><%= (v.position.principal_cents / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD' }) %></dd></div>
+            <div><dt>Gain / loss</dt><dd id="position-gain-<%= v.position.id %>" class="<%= v.gainCents >= 0 ? 'positive' : 'negative' %>">
+              <%= v.gainCents >= 0 ? '+' : '' %><%= (v.gainPct * 100).toFixed(2) %>%
+            </dd></div>
+            <div><dt>Opened</dt><dd><%= new Date(v.position.opened_at).toLocaleDateString('en-US') %></dd></div>
+            <div><dt>Unlocks</dt><dd><%= new Date(v.position.matures_at).toLocaleDateString('en-US') %></dd></div>
+          </dl>
+        </div>
+      <% }) %>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-heading-row">
+      <h2>Recent Transactions</h2>
+      <a href="/transactions">View all</a>
+    </div>
+    <div class="card table-card">
+      <table class="data-table">
+        <thead><tr><th>Date</th><th>Type</th><th>Amount</th></tr></thead>
+        <tbody>
+          <% transactions.forEach(t => { %>
+            <tr>
+              <td><%= new Date(t.created_at).toLocaleString('en-US') %></td>
+              <td class="capitalize"><%= t.type %></td>
+              <td><%= (t.amount_cents / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD' }) %></td>
+            </tr>
+          <% }) %>
+          <% if (transactions.length === 0) { %>
+            <tr><td colspan="3">No transactions yet.</td></tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+<%- include('../partials/footer') %>
+<script type="application/json" id="pools-meta"><%- JSON.stringify(
+  Object.fromEntries(pools.map(p => [p.id, { name: p.name, color: p.color, key: p.key }]))
+) %></script>
+<script src="/js/charts.js"></script>
+<script src="/js/dashboard.js"></script>
