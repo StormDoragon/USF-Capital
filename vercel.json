@@ -1,4 +1,5 @@
 {
+  "framework": null,
   "functions": {
     "api/app.js": {
       "includeFiles": "{views,public,db}/**"
