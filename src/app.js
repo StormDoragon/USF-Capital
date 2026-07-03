@@ -130,4 +130,4 @@ function createApp(db, pools) {
   return app;
 }
 
-module.exports = createApp;
+module.exports = { createApp };
