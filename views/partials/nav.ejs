@@ -1,12 +1,15 @@
 <header class="site-header">
   <div class="site-header-inner container">
-    <a class="brand" href="/">USF <span>Capital</span></a>
+    <a class="brand" href="/" aria-label="USF Capital home">
+      <span class="brand-mark">USF</span>
+      USF <span>Capital</span>
+    </a>
     <nav class="main-nav" aria-label="Main">
       <a href="/" class="<%= path === '/' ? 'active' : '' %>">Home</a>
-      <a href="/how-it-works" class="<%= path === '/how-it-works' ? 'active' : '' %>">How It Works</a>
-      <a href="/pools" class="<%= path && path.startsWith('/pools') ? 'active' : '' %>">Investment Pools</a>
-      <a href="/security" class="<%= path === '/security' ? 'active' : '' %>">Security &amp; Trust</a>
-      <a href="/pricing" class="<%= path === '/pricing' ? 'active' : '' %>">Pricing</a>
+      <a href="/how-it-works" class="<%= path === '/how-it-works' ? 'active' : '' %>">Engine</a>
+      <a href="/pools" class="<%= path && path.startsWith('/pools') ? 'active' : '' %>">Pools</a>
+      <a href="/security" class="<%= path === '/security' ? 'active' : '' %>">Security</a>
+      <a href="/pricing" class="<%= path === '/pricing' ? 'active' : '' %>">Terms</a>
     </nav>
     <div class="nav-actions">
       <% if (user) { %>
@@ -18,7 +21,7 @@
         </form>
       <% } else { %>
         <a href="/login" class="btn btn-secondary btn-small">Log In</a>
-        <a href="/register" class="btn btn-primary btn-small">Create Account</a>
+        <a href="/register" class="btn btn-primary btn-small">Enter Demo</a>
       <% } %>
     </div>
   </div>
