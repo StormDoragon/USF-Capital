@@ -1,0 +1,40 @@
+<%- include('../partials/head', { title: 'About The Build' }) %>
+<%- include('../partials/nav') %>
+<%- include('../partials/disclaimer') %>
+<main id="main" class="container">
+  <%- include('../partials/flash') %>
+
+  <section class="section-block about-grid">
+    <div>
+      <p class="eyebrow">About the build</p>
+      <h1>USF Capital is a product demo dressed like a private capital lab.</h1>
+      <p class="lead">
+        The goal is to show how a serious investor-style platform can feel: clean onboarding,
+        a live dashboard, allocation screens, security settings, synthetic market movement and a polished public brand.
+      </p>
+      <div class="kpi-grid">
+        <div class="kpi-card"><strong><%= poolCount %></strong><span>simulated pools</span></div>
+        <div class="kpi-card"><strong><%= lockYears %>Y</strong><span>illustrative cycle</span></div>
+        <div class="kpi-card"><strong>$<%= totalCapDollars.toFixed(0) %></strong><span>fictional cap</span></div>
+      </div>
+      <p class="fine-print">The app is intentionally fictional. Its value is in the software architecture, interface design and end-to-end product flow.</p>
+    </div>
+
+    <div class="about-stack">
+      <article class="card">
+        <h2>What it demonstrates</h2>
+        <ul class="check-list">
+          <li>Express and EJS server-rendered pages.</li>
+          <li>SQLite-backed users, sessions, positions and performance ticks.</li>
+          <li>Demo identity flow, account security settings and optional 2FA.</li>
+          <li>Synthetic charts, ticker movement and allocation logic.</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h2>What it is not</h2>
+        <p>This is not a live finance company, trading service, fund, exchange, custodian or advisory product. It is a portfolio-grade software simulation.</p>
+      </article>
+    </div>
+  </section>
+</main>
+<%- include('../partials/footer') %>
