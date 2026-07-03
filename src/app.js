@@ -9,6 +9,7 @@ const { ensureCsrfToken, verifyCsrfToken } = require('./middleware/csrf');
 const { attachUser } = require('./middleware/auth');
 const { baselineLimiter } = require('./middleware/rateLimit');
 const { configureTrustProxy, requestId, hardenedHeaders, noStoreSensitiveRoutes } = require('./middleware/security');
+const { TOTAL_DEPOSIT_CAP_CENTS, LOCK_YEARS } = require('./config');
 
 const marketingRoutes = require('./routes/marketing');
 const authRoutes = require('./routes/auth');
@@ -91,6 +92,15 @@ function createApp(db, pools) {
 
   app.use(verifyCsrfToken);
 
+  app.get('/about', (req, res) => {
+    res.render('marketing/about', {
+      title: 'About The Build',
+      totalCapDollars: TOTAL_DEPOSIT_CAP_CENTS / 100,
+      lockYears: LOCK_YEARS,
+      poolCount: pools.length
+    });
+  });
+
   app.use('/', marketingRoutes(db, pools));
   app.use('/', authRoutes(db, pools));
   app.use('/pools', poolsRoutes(db, pools));
@@ -110,7 +120,7 @@ function createApp(db, pools) {
     res.status(status).render('error', {
       title: 'Something went wrong',
       message: status === 500
-        ? 'We hit an unexpected problem on our end. Nothing was lost — please try again in a moment.'
+        ? 'We hit an unexpected problem on our end. Nothing was lost. Please try again in a moment.'
         : (err.message || 'Something went wrong.'),
       status
     });
@@ -119,4 +129,4 @@ function createApp(db, pools) {
   return app;
 }
 
-module.exports = { createApp };
+module.exports = createApp;
