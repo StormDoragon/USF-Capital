@@ -4,57 +4,88 @@
 <main id="main">
   <%- include('../partials/flash') %>
 
-  <section class="hero container">
+  <section class="hero hero-legendary container">
     <div class="hero-copy">
-      <p class="eyebrow">A live, ticking simulation</p>
-      <h1>Watch a simulated global portfolio grow, in plain language.</h1>
+      <p class="eyebrow">Simulated forex, macro and portfolio command center</p>
+      <h1>Train inside a private capital desk without risking a single real dollar.</h1>
       <p class="lead">
-        USF Capital is a demo investment platform. Open a free simulated account, allocate a small virtual
-        deposit across four illustrative pools, and watch real-time simulated charts move — no real money,
-        ever.
+        USF Capital is a premium software demo for simulated investing. It blends a live FX-style ticker,
+        virtual portfolio allocation, risk controls, security workflows and a ticking performance engine into one
+        cinematic investor portal. No real funds, no real brokerage activity, no hidden payment flow.
       </p>
-      <div class="hero-stat">
-        <span class="hero-stat-value <%= heroStat.avgReturnPct >= 0 ? 'positive' : 'negative' %>">
-          <%= heroStat.avgReturnPct >= 0 ? '+' : '' %><%= (heroStat.avgReturnPct * 100).toFixed(1) %>%
-        </span>
-        <span class="hero-stat-label">average simulated pool growth over the last <%= heroStat.days %> days</span>
+
+      <div class="hero-metrics" aria-label="Platform highlights">
+        <div>
+          <span class="metric-value <%= heroStat.avgReturnPct >= 0 ? 'positive' : 'negative' %>">
+            <%= heroStat.avgReturnPct >= 0 ? '+' : '' %><%= (heroStat.avgReturnPct * 100).toFixed(1) %>%
+          </span>
+          <span class="metric-label">avg. simulated pool growth, <%= heroStat.days %> days</span>
+        </div>
+        <div>
+          <span class="metric-value">$<%= totalCapDollars.toLocaleString('en-US', { maximumFractionDigits: 0 }) %></span>
+          <span class="metric-label">virtual lifetime deposit cap</span>
+        </div>
+        <div>
+          <span class="metric-value"><%= lockYears %>Y</span>
+          <span class="metric-label">simulated position lock cycle</span>
+        </div>
       </div>
+
       <div class="hero-actions">
-        <a href="/register" class="btn btn-primary btn-large">Open a Free Simulated Account</a>
-        <a href="/how-it-works" class="btn btn-secondary btn-large">See How It Works</a>
+        <a href="/register" class="btn btn-primary btn-large">Enter the Demo Desk</a>
+        <a href="/how-it-works" class="btn btn-secondary btn-large">View the Engine</a>
       </div>
+      <p class="fine-print hero-note">Built as a portfolio-grade demo. Every price, return, balance and chart is simulated.</p>
     </div>
-    <div class="hero-ticker card" aria-label="Live simulated market ticker">
-      <h2 class="card-title">Live Market Snapshot</h2>
-      <ul id="ticker-list" class="ticker-list">
-        <li class="ticker-placeholder">Loading live prices&hellip;</li>
+
+    <aside class="hero-terminal card" aria-label="Live simulated market ticker">
+      <div class="terminal-topline">
+        <span class="terminal-dot"></span>
+        <span class="terminal-dot"></span>
+        <span class="terminal-dot"></span>
+        <span>USF // MARKET PULSE</span>
+      </div>
+      <h2 class="card-title">Live Simulated Market Snapshot</h2>
+      <ul id="ticker-list" class="ticker-list ticker-list-legendary">
+        <li class="ticker-placeholder">Loading simulated prices&hellip;</li>
       </ul>
-      <p class="fine-print">Illustrative prices, simulated and updated automatically. Not real market data.</p>
-    </div>
+      <div class="terminal-grid" aria-label="Illustrative desk controls">
+        <span>Spread Watch</span><strong>Armed</strong>
+        <span>Risk Gate</span><strong>Online</strong>
+        <span>Ledger Mode</span><strong>Demo</strong>
+      </div>
+      <p class="fine-print">Illustrative FX/index prices, automatically refreshed. Not real market data.</p>
+    </aside>
   </section>
 
-  <section class="container trust-strip" aria-label="Illustrative trust badges">
-    <div class="trust-badge">
-      <strong>Bank-Grade Encryption*</strong>
-      <span>Every page uses HTTPS and strict security headers.</span>
-    </div>
-    <div class="trust-badge">
-      <strong>Simulated Audit Trail*</strong>
-      <span>Every account action is logged and viewable by you.</span>
-    </div>
-    <div class="trust-badge">
-      <strong>Illustrative KYC*</strong>
-      <span>A guided identity check demonstrates a real onboarding flow.</span>
-    </div>
-    <p class="fine-print">*Illustrative demo features. USF Capital is not a licensed or regulated financial institution.</p>
+  <section class="container desk-strip" aria-label="Capital desk modules">
+    <article class="desk-card">
+      <span class="desk-icon">FX</span>
+      <h2>Global Macro &amp; FX</h2>
+      <p>Simulated exposure to major pairs, currency momentum and macro-style drift.</p>
+    </article>
+    <article class="desk-card">
+      <span class="desk-icon">RISK</span>
+      <h2>Capital Guardrails</h2>
+      <p>Deposit caps, lock cycles, penalty math and route-level limiters keep the demo disciplined.</p>
+    </article>
+    <article class="desk-card">
+      <span class="desk-icon">VAULT</span>
+      <h2>Security Theater, But Real Code</h2>
+      <p>CSRF tokens, bcrypt, session storage, 2FA setup and strict headers are actual app protections.</p>
+    </article>
   </section>
 
-  <section class="container">
-    <div class="section-heading">
-      <h2>A snapshot of all four simulated pools</h2>
-      <p>This chart is generated by the same simulation engine that powers investor dashboards.</p>
+  <section class="container market-board-section">
+    <div class="section-heading section-heading-row">
+      <div>
+        <p class="eyebrow">Performance laboratory</p>
+        <h2>Four simulated pools, one command chart</h2>
+        <p>This chart is generated by the same simulation engine that powers investor dashboards.</p>
+      </div>
+      <a href="/pools" class="btn btn-ghost btn-small">Explore Pools</a>
     </div>
-    <div class="card">
+    <div class="card chart-card market-board">
       <canvas id="home-pools-chart" data-chart-type="multiline" height="360" role="img"
         aria-label="Simulated index performance for four investment pools over the last 180 days" tabindex="0"></canvas>
       <script type="application/json" id="home-pools-chart-data"><%- JSON.stringify({
@@ -68,23 +99,55 @@
     </div>
   </section>
 
-  <section class="container value-props">
-    <div class="value-prop">
-      <h3>1. Deposit a small virtual amount</h3>
-      <p>Fund your simulated account instantly with a mock card, bank, or crypto selection. Nothing is charged.</p>
+  <section class="container strategy-grid-section">
+    <div class="section-heading">
+      <p class="eyebrow">Inside the machine</p>
+      <h2>More than a static landing page</h2>
+      <p>USF Capital behaves like a miniature fintech system: account flows, portfolio math, audit-style messaging and live UI feedback.</p>
     </div>
-    <div class="value-prop">
-      <h3>2. Choose your simulated pools</h3>
-      <p>Spread your deposit across four illustrative strategies, from conservative to aggressive.</p>
-    </div>
-    <div class="value-prop">
-      <h3>3. Watch it tick, live</h3>
-      <p>Your dashboard updates automatically as the simulation engine advances your positions.</p>
+    <div class="strategy-grid">
+      <article class="strategy-card">
+        <span class="strategy-number">01</span>
+        <h3>Virtual funding flow</h3>
+        <p>Mock card, bank and crypto deposit choices let users experience onboarding without payment collection.</p>
+      </article>
+      <article class="strategy-card">
+        <span class="strategy-number">02</span>
+        <h3>Pool allocation engine</h3>
+        <p>Users split simulated cash across equity growth, global macro/FX, fixed income and digital assets.</p>
+      </article>
+      <article class="strategy-card">
+        <span class="strategy-number">03</span>
+        <h3>Live portfolio ticking</h3>
+        <p>Positions evolve through a backend simulation loop locally and request-driven catch-up on serverless deploys.</p>
+      </article>
+      <article class="strategy-card">
+        <span class="strategy-number">04</span>
+        <h3>Security cockpit</h3>
+        <p>Sessions, activity logs, CSRF checks, rate limits and optional authenticator-app 2FA make the demo credible.</p>
+      </article>
     </div>
   </section>
 
-  <section class="container cta-band">
-    <h2>Ready to see it for yourself?</h2>
+  <section class="container trust-strip legendary-trust" aria-label="Illustrative trust badges">
+    <div class="trust-badge">
+      <strong>Hardened Headers</strong>
+      <span>Helmet CSP, frame denial, browser policy headers and no-store rules for private routes.</span>
+    </div>
+    <div class="trust-badge">
+      <strong>Simulated Audit Trail</strong>
+      <span>Security-relevant activity is logged for the account owner to review.</span>
+    </div>
+    <div class="trust-badge">
+      <strong>Demo KYC Flow</strong>
+      <span>A guided identity check demonstrates onboarding without external verification.</span>
+    </div>
+    <p class="fine-print">These are demo features and software-design examples. USF Capital is not a licensed or regulated financial institution.</p>
+  </section>
+
+  <section class="container cta-band cta-legendary">
+    <p class="eyebrow">Open the vault door</p>
+    <h2>Launch the simulated desk and test the full investor journey.</h2>
     <p>Create a free simulated account in under a minute. No payment details are ever required.</p>
     <a href="/register" class="btn btn-primary btn-large">Open a Free Simulated Account</a>
   </section>

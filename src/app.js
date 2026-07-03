@@ -8,6 +8,7 @@ const SqliteSessionStore = require('./services/sessionStore');
 const { ensureCsrfToken, verifyCsrfToken } = require('./middleware/csrf');
 const { attachUser } = require('./middleware/auth');
 const { baselineLimiter } = require('./middleware/rateLimit');
+const { configureTrustProxy, requestId, hardenedHeaders, noStoreSensitiveRoutes } = require('./middleware/security');
 
 const marketingRoutes = require('./routes/marketing');
 const authRoutes = require('./routes/auth');
@@ -16,16 +17,15 @@ const portfolioRoutes = require('./routes/portfolio');
 const securityRoutes = require('./routes/security');
 const apiRoutes = require('./routes/api');
 
-// Builds the Express app. `db` is a better-sqlite3 connection, `pools` is the
-// (small, static-for-the-process-lifetime) list of pool rows.
 function createApp(db, pools) {
   const app = express();
 
-  app.set('trust proxy', 1);
+  configureTrustProxy(app);
   app.set('view engine', 'ejs');
   app.set('views', path.join(__dirname, '..', 'views'));
   app.disable('x-powered-by');
 
+  app.use(requestId);
   app.use(helmet({
     contentSecurityPolicy: {
       directives: {
@@ -37,12 +37,13 @@ function createApp(db, pools) {
         fontSrc: ["'self'"],
         objectSrc: ["'none'"],
         baseUri: ["'self'"],
-        frameAncestors: ["'self'"],
+        frameAncestors: ["'none'"],
         formAction: ["'self'"]
       }
     },
     hsts: process.env.NODE_ENV === 'production'
   }));
+  app.use(hardenedHeaders);
 
   app.use(express.static(path.join(__dirname, '..', 'public'), { maxAge: '1h' }));
 
@@ -57,6 +58,7 @@ function createApp(db, pools) {
     resave: false,
     saveUninitialized: false,
     rolling: true,
+    proxy: process.env.TRUST_PROXY === '1' || process.env.VERCEL === '1',
     cookie: {
       httpOnly: true,
       sameSite: 'lax',
@@ -65,8 +67,6 @@ function createApp(db, pools) {
     }
   }));
 
-  // Fixation-resistant defaults: record ip/UA once per session so the
-  // "active sessions" view has something to show even for very old sessions.
   app.use((req, res, next) => {
     if (req.session && !req.session.ip) {
       req.session.ip = req.ip;
@@ -78,9 +78,8 @@ function createApp(db, pools) {
   app.use(baselineLimiter);
   app.use(ensureCsrfToken);
   app.use(attachUser(db));
+  app.use(noStoreSensitiveRoutes);
 
-  // Must run before verifyCsrfToken: a rejected CSRF check renders the error
-  // page immediately, which needs these locals (path/pools/user/flash) set.
   app.use((req, res, next) => {
     res.locals.path = req.path;
     res.locals.pools = pools;
@@ -103,7 +102,6 @@ function createApp(db, pools) {
     res.status(404).render('404', { title: 'Page not found' });
   });
 
-  // eslint-disable-next-line no-unused-vars
   app.use((err, req, res, next) => {
     if (process.env.NODE_ENV !== 'test') {
       console.error(err);
@@ -112,7 +110,7 @@ function createApp(db, pools) {
     res.status(status).render('error', {
       title: 'Something went wrong',
       message: status === 500
-        ? "We hit an unexpected problem on our end. Nothing was lost — please try again in a moment."
+        ? 'We hit an unexpected problem on our end. Nothing was lost — please try again in a moment.'
         : (err.message || 'Something went wrong.'),
       status
     });
