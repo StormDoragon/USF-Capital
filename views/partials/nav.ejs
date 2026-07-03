@@ -2,13 +2,14 @@
   <div class="site-header-inner container">
     <a class="brand" href="/" aria-label="USF Capital home">
       <strong class="brand-mark">USF</strong>
-      USF <span>Capital</span>
+      USF <span>Apex Lab</span>
     </a>
     <nav class="main-nav" aria-label="Main">
       <a href="/" class="<%= path === '/' ? 'active' : '' %>">Home</a>
       <a href="/how-it-works" class="<%= path === '/how-it-works' ? 'active' : '' %>">Engine</a>
       <a href="/pools" class="<%= path && path.startsWith('/pools') ? 'active' : '' %>">Pools</a>
       <a href="/security" class="<%= path === '/security' ? 'active' : '' %>">Security</a>
+      <a href="/about" class="<%= path === '/about' ? 'active' : '' %>">About</a>
       <a href="/pricing" class="<%= path === '/pricing' ? 'active' : '' %>">Terms</a>
     </nav>
     <div class="nav-actions">
@@ -21,7 +22,7 @@
         </form>
       <% } else { %>
         <a href="/login" class="btn btn-secondary btn-small">Log In</a>
-        <a href="/register" class="btn btn-primary btn-small">Enter Demo</a>
+        <a href="/register" class="btn btn-primary btn-small">Launch Demo</a>
       <% } %>
     </div>
   </div>
